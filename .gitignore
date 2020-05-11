@@ -21,3 +21,7 @@ $RECYCLE.BIN/
 # =========================
 # Operating System Files
 # =========================
+/client_secret.json
+/image
+/data
+/db
