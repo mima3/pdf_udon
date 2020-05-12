@@ -31,7 +31,7 @@ class Image(Model):
 class OcrText(Model):
     """OCRのテキスト情報"""
     id = AutoIncrementField()
-    image_id = ForeignKeyField(Image, related_name='image_id', index=True, null=False, unique=True)
+    image_id = ForeignKeyField(Image, related_name='image', index=True, null=False, unique=True)
     text = CharField()
 
 
@@ -86,6 +86,6 @@ class OcrDb:
 
     def get_pdf_texts(self, pdf_path):
         rec_image = Image.get_or_none(pdf_path=pdf_path)
-        ret = (OcrText.select(OcrText.text).join(Image, JOIN.LEFT_OUTER).where(Image.pdf_path ** "%{}%".format(pdf_path)))
-        return ret
+        ret = (OcrText.select(Image.pdf_path.alias('pdf_path'), Image.page_num.alias('page_num'), OcrText.text).join(Image, JOIN.LEFT_OUTER).where(Image.pdf_path ** "%{}%".format(pdf_path)))
+        return ret.tuples()
 
